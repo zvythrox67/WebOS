@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBER_OS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+    <div id="crt-overlay"></div>
+    <div id="vignette"></div>
+
+
+    <div id = "boot">
+        <div class="glitch"> CYBER_OS</div>
+        <div class="sub">//BOOTING...</div>
+        <div class="bootlog" id="boot-log"></div>
+        <div class="bar"><div class="bar-fill"></div></div>
+    </div>
+
+    <div id="desktop"> 
+        <div id="icons"></div>
+        <div id="windows-layer"></div>
+    </div>
+
+    <div id="context-menu">
+        <button data-action="wallpaper"> Cycle grid theme</button>
+        <button data-action="note">New note</button>
+        <button data-action="about">▸ About CYBER_OS</button>
+        <button data-action="refresh">▸ Refresh desktop</button>
+    </div>
+
+    <div id="taskbar">
+        <button id="start-btn">Start</button>
+        <div id="open-windows"></div>
+        <div id="clock">--:--</div>
+    </div>
+
+    <div id="start-menu">
+        <input id="start-search" type="text" placeholder="&gt; search apps_">
+        <div id="start-apps"></div>
+        <div id="start-footer">
+            <button id="shutdown-btn" title="Sleep">⏻</button>
+        </div>
+    </div>
+
+    <div id="sleep-overlay">
+        <div class="zzz">⏻ STANDBY</div>
+        <p>CYBER_OS is idle. Click anywhere to resume.</p>
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
