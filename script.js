@@ -1214,7 +1214,6 @@ function toggleMaximize(id) {
 }
 
 function openApp(id) {
-    console.log('openApp called with:', id);
     try {
         _openApp(id);
     } catch (err) {
