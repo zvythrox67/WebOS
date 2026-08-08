@@ -91,7 +91,7 @@ html, body {
     width: 280px;
     font-size: 11px;
     line-height: 1.7;
-    height: 100px;
+    height: 150px;
     overflow: hidden;
 }
 
@@ -117,4 +117,403 @@ html, body {
 #boot.hide {
     opacity: 0;
     pointer-events: none;
+}
+
+#desktop {
+    position: fixed;
+    inset: 0;
+    bottom: 52px;
+    background:
+        linear-gradient(rgba(5,7,12,0.92), rgba(5,7,12,0.96)),
+        repeating-linear-gradient(0deg, rgba(0,240,255,0.06) 0px, transparent 1px, transparent 40px),
+        repeating-linear-gradient(90deg, rgba(0,240,255,0.06) 0px, transparent 1px, transparent 40px),
+        radial-gradient(ellipse at 20% 100%, rgba(255,46,146,0.16), transparent 55%),
+        radial-gradient(ellipse at 85% 0%, rgba(0,240,255,0.14), transparent 55%),
+        var(--dark-bg);
+    overflow: hidden;
+}
+
+#icons {
+    position: absolute;
+    top: 20px;
+    left: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex-wrap: wrap;
+    height: calc(100% - 40px);
+}
+
+.icon {
+    width: 88px;
+    padding: 10px 4px 8px;
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-radius: var(--round-corners);
+}
+
+.icon:hover {
+    background: rgb(0, 240, 255, 0.07);
+    border-color: var(--glow-line);
+}
+
+.icon:active {
+    background: rgba(0,240,255,0.14);
+}
+
+.icon .emoji {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--round-corners);
+    background: var(--panel-bg);
+    border: 1px solid var(--glow-line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+}
+
+.icon .label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--text-color);
+    text-transform: uppercase;
+}
+
+#context-menu {
+    position: absolute;
+    z-index: 5000;
+    background: var(--panel-bg);
+    border: 1px solid var(--glow-line);
+    border-radius: var(--round-corners);
+    box-shadow: var(--shadow-effect);
+    padding: 5px;
+    min-width: 200px;
+    display: none;
+    font-size: 13px;
+}
+
+#context-menu button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 9px 12px;
+    border: none;
+    background: none;
+    font-family: 'Rajdhani' sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-color);
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+#context-menu button:hover {
+    background: rgba(0,240,255,0.1);
+    color: var(--neon-blue);
+}
+
+#windows-layer {
+    position: absolute;
+    inset: 0;
+}
+
+.window {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    background: var(--panel-bg);
+    border-radius: var(--round-corners);
+    box-shadow: var(--shadow-effect);
+    overflow: hidden;
+    min-width: 260px;
+    min-height: 180px;
+    border: 1px solid var(--glow-line);
+}
+
+.window.maximized {
+    left: 6px !important;
+    top: 6px !important;
+    width: calc(100% - 12px) !important;
+    height: calc(100% - 12px) !important;
+}
+
+.titlebar {
+    background: linear-gradient(90deg, rgba(0,240,255,0.12), rgba(255,46,146,0.1));
+    border-bottom: 1px solid var(--glow-line);
+    padding: 9px 10px 9px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: grab; 
+}
+
+.titlebar:active {
+    cursor: grabbing;
+}
+
+.title {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--neon-blue);
+    text-transform: uppercase;
+}
+
+.win-controls {
+    display: flex;
+    gap: 6px;
+}
+
+.win-btn {
+    width: 20px;
+    height: 20px;
+    border-radius: 2px;
+    border: 1px solid var(--glow-line);
+    cursor: pointer;
+    font-size: 11px;
+    background: var(--dark-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: var(--text-color);
+}
+
+.win-btn.min:hover {
+    color: var(--amber);
+    border-color: var(--amber);
+}
+
+.win-btn.max:hover {
+    color: var(--neon-blue);
+    border-color: var(--neon-blue);
+}
+
+.win-btn.close:hover {
+    color: var(--neon-pink);
+    border-color: var(--neon-pink);
+}
+
+.win-content {
+    flex: 1;
+    overflow: auto;
+    padding: 14px;
+    font-size: 14px;
+    background: var(--panel-bg);
+}
+
+.resize-handle {
+    position: absolute;
+    right: 2px;
+    bottom: 2px;
+    width: 16px;
+    height: 16px;
+    cursor: nwse-resize;
+    background: linear-gradient(135deg, transparent 50%, var(--neon-blue) 50%);
+    opacity: 0.5;
+}
+
+#taskbar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 52px;
+    z-index: 4000;
+    background: var(--dark-bg);
+    border-top: 1px solid var(--glow-line);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 12px;
+}
+
+#start-btn {
+    background: var(--panel-bg);
+    border: 1px solid var(--neon-blue);
+    color: var(--neon-blue);
+    font-weight: 700;
+    font-family: 'Orbitron', sans-serif;
+    padding: 8px 16px;
+    border-radius: var(--round-corners);
+    cursor: pointer;
+    font-size: 12px;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#start-btn:hover{
+    background:rgba(0,240,255,0.12); 
+}
+
+#open-windows {
+    display: flex;
+    gap: 6px;
+    flex: 1;
+    overflow-x: auto;
+}
+
+.taskbtn {
+    background: var(--panel-bg);
+    color: var(--dim-text);
+    border: 1px solid var(--glow-line);
+    padding: 7px 12px;
+    border-radius: var(--round-corners);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.taskbtn.active {
+    color: var(--neon-blue);
+    border-color: var(--neon-blue);
+    background: rgba(0, 240, 255, 0.08);
+}
+
+#clock {
+    color: var(--neon-pink);
+    font-weight: 700;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 14px;
+    min-width: 78px;
+    text-align: right;
+}
+
+#start-menu {
+    position: fixed;
+    left: 10px;
+    bottom: 60px;
+    width: 300px;
+    max-width: 420px;
+    background: var(--panel-bg);
+    border: 1px solid var(--glow-line);
+    border-radius: var(--round-corners);
+    box-shadow: var(--shadow-effect);
+    z-index: 4500;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+#start-menu.show {
+    display: flex;
+}
+
+#start-search {
+    margin: 12px;
+    padding: 9px 12px;
+    border-radius: var(--round-corners);
+    border: 1px solid var(--glow-line);
+    background: var(--dark-bg);
+    color: var(--text-color);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    outline: None;
+}
+
+#start-search::placeholder {
+    color: var(--dim-text);
+}
+
+#start-apps {
+    overflow-y: auto;
+    padding: 0 8px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.start-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 10px;
+    border-radius: var(--round-corners);
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+}
+
+.start-item:hover {
+    background: rgba(0,240,255,0.08);
+    color: var(--neon-blue);
+}
+
+.start-item .emoji {
+    font-size: 16px;
+    width: 24px;
+    text-align:center;
+}
+
+#start-footer {
+    border-top: 1px solid var(--glow-line);
+    padding: 10px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#start-footer .who {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--dim-text);
+    font-family: 'Share Tech Mono', monospace;
+}
+
+#shutdown-btn {
+    background: none;
+    border: 1px solid var(--glow-line);
+    border-radius: var(--round-corners);
+    color: var(--text-color);
+    font-size: 14px;
+    cursor: pointer;
+    padding: 4px 8px;
+}
+
+#shutdown-btn:hover {
+    border-color: var(--neon-pink);
+    color: var(--neon-pink);
+}
+
+#sleep-overlay {
+    position: fixed;
+    inset:0;
+    background: #030407;
+    color: var(--neon-blue);
+    z-index: 9998;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    cursor: pointer;
+    font-family: 'Share Tech Mono', monospace;
+}
+
+#sleep-overlay.show {
+    display: flex;
+}
+
+#sleep-overlay .zzz {
+  font-size: 34px;
+  margin-bottom: 10px;
+}
+
+#sleep-overlay p {
+    font-size: 13px;
+    opacity: 0.6;
+    letter-spacing: 1px;
 }
