@@ -88,38 +88,6 @@ if(savedTheme  !== null) {
     changeTheme(parseInt(savedTheme, 10) || 0);
 }
 
-const catArt = [
-    { color: '#ff2ed1', name: 'Flamingo' },
-    { color: '#fe1602', name: 'Apple' },
-    { color: '#8201fe', name: 'Violet' },
-    { color: '#00fe66', name: 'Sage' },
-    { color: '#fefe00', name: 'Mango' },
-    { color: '#00F0FF', name: 'Cyan' }
-];
-
-const catSVGs = catArt.map(cat => {
-    const c = cat.color;
-    const name = cat.name.toUpperCase();
-    
-    return `
-        <svg viewBox="0 0 100 100">
-            <rect width="100" height="100" fill="#03040a"/>
-            <!-- Cat ears -->
-            <polygon points="28,32 20,10 40,26" fill="none" stroke="${c}" stroke-width="2.5"/>
-            <polygon points="72,32 80,10 60,26" fill="none" stroke="${c}" stroke-width="2.5"/>
-            <!-- Cat face -->
-            <ellipse cx="50" cy="55" rx="28" ry="24" fill="none" stroke="${c}" stroke-width="2.5"/>
-            <!-- Eyes -->
-            <circle cx="38" cy="52" r="3" fill="${c}"/>
-            <circle cx="62" cy="52" r="3" fill="${c}"/>
-            <!-- Mouth -->
-            <path d="M45 62 Q50 66 55 62" stroke="${c}" stroke-width="2" fill="none"/>
-            <!-- Name -->
-            <text x="50" y="94" font-size="9" text-anchor="middle" fill="${c}">${name}</text>
-        </svg>
-  `;
-});
-
 const trackList = [
     { title: 'call of the night', mood: 'synthwave · night drive' },
     { title: 'ghost in the terminal', mood: 'darksynth · low fi' },
@@ -131,6 +99,106 @@ const trackList = [
     { title: 'Skyline', mood: 'grand · slow' },
     { title: 'Glitch in the Soul', mood: 'Paranoid · hypnotic' },
 ]
+
+const galleryFolders = [
+    {id: 'vault', name: 'VAULT_01', count: 12},
+    {id: 'dreamcore', name: 'DREAMCORE', count: 15},
+    {id: 'glitch', name:'GLITCH_ARCHIVE', count: 10}
+]
+
+const pgUsernames = [
+    'neon_wraith', 'glitch.queen', 'chrome_habit', 'nullhead_04', 'synth.siren',
+    '0xdrift', 'static_moth', 'voidjacker', 'pixel_ronin', 'ghostwire_99',
+    'lofi_lurker', 'neonfeather', 'razorlily', 'datastream_dee', 'holo_hank',
+    'crash_queen', 'wire_monk', 'echo_vex', 'midnight_byte', 'flicker_fox'
+];
+
+const pgCaptions = [
+    'chasing neon through the wet streets tonight',
+    '3am and the city still hasn\'t slept',
+    'new rig, who dis',
+    'server room vibes only',
+    'found this alley and had to stop',
+    'running on synth and bad decisions',
+    'glitch in the matrix or just my wifi',
+    'rooftop signal, city static',
+    'plugged in and powered up',
+    'low battery, high energy',
+    'static on the skyline tonight',
+    'chrome dreams and neon screams',
+    'another night in the grid',
+    'error 404: sleep not found',
+    'hacked the sunset filter',
+    'wires crossed, vibes intact',
+    'downtown after the rain hits different',
+    'lost signal, found the view',
+    'this city never logs off',
+    'byte sized adventure today'
+];
+
+const pgMessages = [
+    'hey are you around later?',
+    'did you catch the drop last night?',
+    'lol yeah that was wild',
+    'sending the files over now',
+    'meet at the usual spot?',
+    'you still up for tonight?',
+    'that gig was insane',
+    'check your inbox, sent something',
+    'omw, 10 mins',
+    'can\'t talk rn, ttyl',
+    'that last post is fire',
+    'let\'s link up this weekend'
+];
+
+const pgBios = [
+    'building things in the dark // signal lost',
+    'chasing neon since 2049',
+    'wires, static & bad wifi',
+    'just here for the glitch',
+    'professional night owl // amateur hacker'
+];
+
+function pgRandom(list) {
+    return list[Math.floor(Math.random() * list.length)];
+}
+
+function generatePosts(count) {
+    const posts = [];
+    for (let i = 0; i < count; i++) {
+        posts.push({
+            user: pgRandom(pgUsernames),
+            caption: pgRandom(pgCaptions),
+            likes: Math.floor(Math.random() * 4000) + 20,
+            comments: Math.floor(Math.random() * 120),
+            time: (Math.floor(Math.random() * 47) + 1) + 'h',
+            hue: Math.floor(Math.random() * 360)
+        });
+    }
+    return posts;
+}
+
+function generateMessages(count) {
+    const list = [];
+    for (let i = 0; i < count; i++) {
+        list.push({
+            user: pgRandom(pgUsernames),
+            msg: pgRandom(pgMessages),
+            time: (Math.floor(Math.random() * 23) + 1) + 'h',
+            unread: Math.random() < 0.4
+        });
+    }
+    return list;
+}
+
+function generateProfile() {
+    return {
+        username: pgRandom(pgUsernames),
+        followers: Math.floor(Math.random() * 101) + 100,
+        following: Math.floor(Math.random() * 180) + 30,
+        bio: pgRandom(pgBios)
+    };
+}
 
 const APPS = {
     terminal: {
@@ -145,7 +213,6 @@ const APPS = {
 
             const output = document.createElement('div');
             output.className = 'term-output';
-            output.id = 'terminal-out';
             output.textContent = 'CYBER_OS TERMINAL v1.0\ntype \'help\' for commands.';
 
             const inputLine = document.createElement('div');
@@ -156,7 +223,6 @@ const APPS = {
 
             const input = document.createElement('input');
             input.className = 'term-input';
-            input.id = 'term-in';
             input.autocomplete = 'off';
 
             inputLine.appendChild(prompt);
@@ -168,8 +234,8 @@ const APPS = {
             return container;
         },
 
-        init() {
-            const output = document.getElementById('term-out');
+        init(container) {
+            const output = document.getElementById('term-outputput');
             const input = document.getElementById('term-in');
 
             function printLine(text){
@@ -255,12 +321,11 @@ const APPS = {
             const container = document.createElement('div');
             
             const textarea = document.createElement('textarea');
-            textarea.id = 'notes-area';
+            textarea.className = 'notes-area';
             textarea.placeholder = 'Write something...';
             
             const status = document.createElement('div');
             status.className = 'notes-status';
-            status.id = 'notes-status';
             status.textContent = 'loading...';
             
             container.appendChild(textarea);
@@ -268,9 +333,9 @@ const APPS = {
             
             return container;
         },
-        init() {
-            const textarea = document.getElementById('notes-area');
-            const status = document.getElementById('notes-status');
+        init(container) {
+            const textarea = container.querySelector('.notes-area');
+            const status = container.querySelector('.notes-status');
 
             const savedNotes = getData('notes-content');
             textarea.value = savedNotes || '';
@@ -336,7 +401,7 @@ const APPS = {
             return container;
         },
 
-        init() {
+        init(container) {
             const canvas = document.getElementById('paint-canvas');
             const ctx = canvas.getContext('2d');
 
@@ -356,11 +421,11 @@ const APPS = {
                 });
             });
 
-            document.getElementById('brush-size').addEventListener('input', (e) => {
+            document.querySelector('brush-size').addEventListener('input', (e) => {
                 brushSize = parseInt(e.target.value, 10);
             });
 
-            document.getElementById('paint-clear').addEventListener('click', () => {
+            document.querySelector('paint-clear').addEventListener('click', () => {
                 ctx.fillStyle = '#03040a';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
             });
@@ -406,7 +471,7 @@ const APPS = {
     },
     music: {
         title: 'Music',
-        icon: '♪',
+        icon: '𝄞',
         width: 300,
         height: 360,
         
@@ -416,21 +481,18 @@ const APPS = {
             
             const art = document.createElement('div');
             art.className = 'music-art';
-            art.textContent = '📡';
+            art.textContent = '⋆༺𓆩☠︎︎𓆪༻⋆';
             
             const title = document.createElement('div');
-            title.className = 'track-title';
-            title.id = 'mp-title';
+            title.className = 'track-title mp-title';
             title.textContent = trackList[0].title;
             
             const mood = document.createElement('div');
-            mood.className = 'track-sub';
-            mood.id = 'mp-sub';
+            mood.className = 'track-sub mp-sub';
             mood.textContent = trackList[0].mood;
             
             const bars = document.createElement('div');
-            bars.className = 'bars';
-            bars.id = 'mp-bars';
+            bars.className = 'bars mp-bars';
             
             for (let i = 0; i < 9; i++) {
                 const bar = document.createElement('span');
@@ -460,7 +522,6 @@ const APPS = {
             
             const list = document.createElement('div');
             list.className = 'track-list';
-            list.id = 'mp-list';
             
             container.appendChild(art);
             container.appendChild(title);
@@ -476,11 +537,11 @@ const APPS = {
             let currentTrack = 0;
             let isPlaying = false;
 
-            const titleEl = document.getElementById('mp-title');
-            const moodEl = document.getElementById('mp-sub');
-            const barsEl = document.getElementById('mp-bars');
-            const playBtn = document.getElementById('mp-play');
-            const listEl = document.getElementById('mp-list');
+            const titleEl = container.querySelector('.mp-title');
+            const moodEl = container.querySelector('.mp-sub');
+            const barsEl = container.querySelector('.mp-bars');
+            const playBtn = container.querySelector('.mp-play');
+            const listEl = container.querySelector('.mp-list');
 
             function renderTrackList() {
                 listEl.innerHTML = '';
@@ -519,17 +580,17 @@ const APPS = {
                 renderTrackList();
             }
 
-            document.getElementById('mp-play').addEventListener('click', () => {
+            container.querySelector('.mp-play').addEventListener('click', () => {
                 isPlaying = !isPlaying;
                 updateDisplay();
             });
 
-            document.getElementById('mp-prev').addEventListener('click', () => {
+            container.querySelector('mp-prev').addEventListener('click', () => {
                 currentTrack = (currentTrack - 1 + trackList.length) % trackList.length;
                 updateDisplay();
             });
 
-            document.getElementById('mp-next').addEventListener('click', () => {
+            container.querySelector('.mp-next').addEventListener('click', () => {
                 currentTrack = (currentTrack + 1) % trackList.length;
                 updateDisplay();
             });
@@ -540,25 +601,383 @@ const APPS = {
 
     gallery: {
         title: 'Gallery',
-        icon: '▧',
-        width: 380,
-        height: 360,
-        
+        icon: '🅾',
+        width: 420,
+        height: 420,
+ 
         createContent() {
             const container = document.createElement('div');
-            container.className = 'gallery-grid';
-            
-            catSVGs.forEach(svg => {
-                const card = document.createElement('div');
-                card.className = 'gallery-card';
-                card.innerHTML = svg;
-                container.appendChild(card);
-            });
-            
+            container.className = 'gallery-app';
             return container;
         },
-        
-        init() {}
+ 
+        init(container) {
+            function renderFolders() {
+                container.innerHTML = '';
+ 
+                const grid = document.createElement('div');
+                grid.className = 'gallery-folders';
+ 
+                galleryFolders.forEach(folder => {
+                    const card = document.createElement('div');
+                    card.className = 'folder-card';
+ 
+                    const icon = document.createElement('div');
+                    icon.className = 'folder-icon';
+                    icon.textContent = '📁';
+ 
+                    const name = document.createElement('div');
+                    name.className = 'folder-name';
+                    name.textContent = folder.name;
+ 
+                    const count = document.createElement('div');
+                    count.className = 'folder-count';
+                    count.textContent = folder.count + ' photos';
+ 
+                    card.appendChild(icon);
+                    card.appendChild(name);
+                    card.appendChild(count);
+ 
+                    card.addEventListener('click', () => renderPhotos(folder));
+                    grid.appendChild(card);
+                });
+ 
+                container.appendChild(grid);
+            }
+ 
+            function renderPhotos(folder) {
+                container.innerHTML = '';
+ 
+                const header = document.createElement('div');
+                header.className = 'gallery-header';
+ 
+                const backBtn = document.createElement('button');
+                backBtn.className = 'gallery-back';
+                backBtn.textContent = '← BACK';
+                backBtn.addEventListener('click', renderFolders);
+ 
+                const title = document.createElement('div');
+                title.className = 'gallery-folder-title';
+                title.textContent = folder.name;
+ 
+                header.appendChild(backBtn);
+                header.appendChild(title);
+                container.appendChild(header);
+ 
+                const photoGrid = document.createElement('div');
+                photoGrid.className = 'gallery-photos';
+ 
+                for (let i = 1; i <= folder.count; i++) {
+                    const tile = document.createElement('div');
+                    tile.className = 'photo-tile';
+ 
+                    const img = document.createElement('img');
+                    img.src = 'images/' + folder.id + '/image' + i + '.png';
+                    img.alt = 'image' + i + '.png';
+                    img.loading = 'lazy';
+ 
+                    const fallback = document.createElement('div');
+                    fallback.className = 'photo-fallback';
+ 
+                    const fbIcon = document.createElement('span');
+                    fbIcon.textContent = '🖼';
+                    const fbLabel = document.createElement('small');
+                    fbLabel.textContent = 'image' + i + '.png';
+ 
+                    fallback.appendChild(fbIcon);
+                    fallback.appendChild(fbLabel);
+ 
+                    img.addEventListener('error', () => {
+                        tile.classList.add('broken');
+                    });
+ 
+                    tile.appendChild(img);
+                    tile.appendChild(fallback);
+                    photoGrid.appendChild(tile);
+                }
+ 
+                container.appendChild(photoGrid);
+            }
+ 
+            renderFolders();
+        }
+    },
+ 
+    pixelgram: {
+        title: 'Cybergram',
+        icon: '❤',
+        width: 380,
+        height: 560,
+ 
+        createContent() {
+            const container = document.createElement('div');
+            container.className = 'pixelgram';
+ 
+            const topbar = document.createElement('div');
+            topbar.className = 'pg-topbar';
+            const logo = document.createElement('span');
+            logo.className = 'pg-logo';
+            logo.textContent = 'PIXELGRAM';
+            topbar.appendChild(logo);
+ 
+            const pages = document.createElement('div');
+            pages.className = 'pg-pages';
+ 
+            const home = document.createElement('div');
+            home.className = 'pg-page pg-home active';
+ 
+            const messages = document.createElement('div');
+            messages.className = 'pg-page pg-messages';
+ 
+            const profile = document.createElement('div');
+            profile.className = 'pg-page pg-profile';
+ 
+            pages.appendChild(home);
+            pages.appendChild(messages);
+            pages.appendChild(profile);
+ 
+            const tabbar = document.createElement('div');
+            tabbar.className = 'pg-tabbar';
+ 
+            const tabs = [
+                { id: 'home', icon: '⌂', label: 'Home' },
+                { id: 'messages', icon: '✉', label: 'Messages' },
+                { id: 'profile', icon: '◍', label: 'Profile' }
+            ];
+ 
+            tabs.forEach((tab, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'pg-tab' + (i === 0 ? ' active' : '');
+                btn.dataset.tab = tab.id;
+ 
+                const iconSpan = document.createElement('span');
+                iconSpan.textContent = tab.icon;
+                const labelSmall = document.createElement('small');
+                labelSmall.textContent = tab.label;
+ 
+                btn.appendChild(iconSpan);
+                btn.appendChild(labelSmall);
+                tabbar.appendChild(btn);
+            });
+ 
+            container.appendChild(topbar);
+            container.appendChild(pages);
+            container.appendChild(tabbar);
+ 
+            return container;
+        },
+ 
+        init(container) {
+            const homePage = container.querySelector('.pg-home');
+            const messagesPage = container.querySelector('.pg-messages');
+            const profilePage = container.querySelector('.pg-profile');
+            const tabs = container.querySelectorAll('.pg-tab');
+            const pages = { home: homePage, messages: messagesPage, profile: profilePage };
+ 
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    Object.values(pages).forEach(p => p.classList.remove('active'));
+                    pages[tab.dataset.tab].classList.add('active');
+                });
+            });
+ 
+            function buildPhoto(hue) {
+                const photo = document.createElement('div');
+                photo.className = 'pg-photo';
+                photo.style.background = 'linear-gradient(135deg, hsl(' + hue + ',80%,55%), hsl(' + ((hue + 70) % 360) + ',75%,45%))';
+                return photo;
+            }
+ 
+            function buildAvatar(sizeClass, hue, letter) {
+                const avatar = document.createElement('div');
+                avatar.className = 'pg-avatar' + (sizeClass ? ' ' + sizeClass : '');
+                avatar.style.background = 'linear-gradient(135deg, hsl(' + hue + ',80%,55%), hsl(' + ((hue + 70) % 360) + ',75%,45%))';
+                avatar.textContent = letter;
+                return avatar;
+            }
+ 
+            function renderHome() {
+                const posts = generatePosts(20);
+                posts.forEach(post => {
+                    const card = document.createElement('div');
+                    card.className = 'pg-post';
+ 
+                    const head = document.createElement('div');
+                    head.className = 'pg-post-head';
+ 
+                    const avatar = buildAvatar('', post.hue, post.user.charAt(0).toUpperCase());
+ 
+                    const uname = document.createElement('div');
+                    uname.className = 'pg-post-user';
+                    const unameB = document.createElement('b');
+                    unameB.textContent = post.user;
+                    const unameS = document.createElement('small');
+                    unameS.textContent = post.time + ' ago';
+                    uname.appendChild(unameB);
+                    uname.appendChild(unameS);
+ 
+                    head.appendChild(avatar);
+                    head.appendChild(uname);
+ 
+                    const photo = buildPhoto(post.hue);
+ 
+                    const actions = document.createElement('div');
+                    actions.className = 'pg-post-actions';
+ 
+                    const likeBtn = document.createElement('button');
+                    likeBtn.className = 'pg-like-btn';
+                    likeBtn.textContent = '♡';
+ 
+                    const commentIcon = document.createElement('span');
+                    commentIcon.textContent = '💬';
+ 
+                    const shareIcon = document.createElement('span');
+                    shareIcon.textContent = '↗';
+ 
+                    actions.appendChild(likeBtn);
+                    actions.appendChild(commentIcon);
+                    actions.appendChild(shareIcon);
+ 
+                    const likesRow = document.createElement('div');
+                    likesRow.className = 'pg-likes';
+                    let likeCount = post.likes;
+                    let liked = false;
+                    likesRow.textContent = likeCount.toLocaleString() + ' likes';
+ 
+                    likeBtn.addEventListener('click', () => {
+                        liked = !liked;
+                        likeBtn.textContent = liked ? '♥' : '♡';
+                        likeBtn.classList.toggle('liked', liked);
+                        likeCount += liked ? 1 : -1;
+                        likesRow.textContent = likeCount.toLocaleString() + ' likes';
+                    });
+ 
+                    const captionRow = document.createElement('div');
+                    captionRow.className = 'pg-caption';
+                    const capB = document.createElement('b');
+                    capB.textContent = post.user;
+                    captionRow.appendChild(capB);
+                    captionRow.appendChild(document.createTextNode(' ' + post.caption));
+ 
+                    const commentsRow = document.createElement('div');
+                    commentsRow.className = 'pg-comments-link';
+                    commentsRow.textContent = post.comments > 0 ? 'View all ' + post.comments + ' comments' : 'No comments yet';
+ 
+                    card.appendChild(head);
+                    card.appendChild(photo);
+                    card.appendChild(actions);
+                    card.appendChild(likesRow);
+                    card.appendChild(captionRow);
+                    card.appendChild(commentsRow);
+ 
+                    homePage.appendChild(card);
+                });
+            }
+ 
+            function renderMessages() {
+                const convos = generateMessages(5);
+                convos.forEach(convo => {
+                    const row = document.createElement('div');
+                    row.className = 'pg-msg-row' + (convo.unread ? ' unread' : '');
+ 
+                    const hue = Math.floor(Math.random() * 360);
+                    const avatar = buildAvatar('sm', hue, convo.user.charAt(0).toUpperCase());
+ 
+                    const info = document.createElement('div');
+                    info.className = 'pg-msg-info';
+                    const infoB = document.createElement('b');
+                    infoB.textContent = convo.user;
+                    const infoS = document.createElement('small');
+                    infoS.textContent = convo.msg;
+                    info.appendChild(infoB);
+                    info.appendChild(infoS);
+ 
+                    const meta = document.createElement('div');
+                    meta.className = 'pg-msg-meta';
+                    const metaS = document.createElement('small');
+                    metaS.textContent = convo.time;
+                    meta.appendChild(metaS);
+                    if (convo.unread) {
+                        const dot = document.createElement('span');
+                        dot.className = 'dot';
+                        meta.appendChild(dot);
+                    }
+ 
+                    row.appendChild(avatar);
+                    row.appendChild(info);
+                    row.appendChild(meta);
+ 
+                    row.addEventListener('click', () => {
+                        row.classList.remove('unread');
+                    });
+ 
+                    messagesPage.appendChild(row);
+                });
+            }
+ 
+            function renderProfile() {
+                const profile = generateProfile();
+ 
+                const head = document.createElement('div');
+                head.className = 'pg-profile-head';
+ 
+                const avatar = buildAvatar('lg', 195, profile.username.charAt(0).toUpperCase());
+ 
+                const stats = document.createElement('div');
+                stats.className = 'pg-stats';
+ 
+                const statData = [
+                    ['2', 'Posts'],
+                    [String(profile.followers), 'Followers'],
+                    [String(profile.following), 'Following']
+                ];
+ 
+                statData.forEach(([num, label]) => {
+                    const statBox = document.createElement('div');
+                    const b = document.createElement('b');
+                    b.textContent = num;
+                    const small = document.createElement('small');
+                    small.textContent = label;
+                    statBox.appendChild(b);
+                    statBox.appendChild(small);
+                    stats.appendChild(statBox);
+                });
+ 
+                head.appendChild(avatar);
+                head.appendChild(stats);
+ 
+                const uname = document.createElement('div');
+                uname.className = 'pg-profile-name';
+                uname.textContent = profile.username;
+ 
+                const bio = document.createElement('div');
+                bio.className = 'pg-profile-bio';
+                bio.textContent = profile.bio;
+ 
+                const editBtn = document.createElement('button');
+                editBtn.className = 'pg-edit-btn';
+                editBtn.textContent = 'EDIT PROFILE';
+ 
+                const postsGrid = document.createElement('div');
+                postsGrid.className = 'pg-profile-grid';
+ 
+                for (let i = 0; i < 2; i++) {
+                    postsGrid.appendChild(buildPhoto(Math.floor(Math.random() * 360)));
+                }
+ 
+                profilePage.appendChild(head);
+                profilePage.appendChild(uname);
+                profilePage.appendChild(bio);
+                profilePage.appendChild(editBtn);
+                profilePage.appendChild(postsGrid);
+            }
+ 
+            renderHome();
+            renderMessages();
+            renderProfile();
+        }
     },
 
     calculator: {
@@ -601,11 +1020,11 @@ const APPS = {
             return container;
         },
         
-        init() {
-            const display = document.getElementById('calc-display');
+        init(container) {
+            const display = container.querySelector('#calc-display');
             let expression = '';
 
-            document.querySelectorAll('.calc-grid button').forEach(btn => {
+            container.querySelectorAll('.calc-grid button').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const key = btn.dataset.key;
 
@@ -641,7 +1060,7 @@ const APPS = {
 
     about: {
         title: 'About',
-        icon: 'i',
+        icon: '✴︎',
         width: 300,
         height: 370,
         
@@ -655,7 +1074,7 @@ const APPS = {
             
             const specs = [
                 ['USERNAME: ', 'zvythrox'],
-                ['APPS: ', '7 installed'],
+                ['APPS: ', '8 installed'],
                 ['VIBE: ', 'cyberpunk']
             ];
             
@@ -699,7 +1118,7 @@ const APPS = {
             
             const big = document.createElement('div');
             big.className = 'big';
-            big.textContent = '⌫';
+            big.textContent = '🗑';
             
             const msg = document.createElement('p');
             msg.textContent = 'Empty. Too tidy for your own good.';
@@ -809,7 +1228,7 @@ function openApp(id) {
     
     const maxBtn = document.createElement('button');
     maxBtn.className = 'win-btn max';
-    maxBtn.textContent = '▢';
+    maxBtn.textContent = '⛶';
     
     const closeBtn = document.createElement('button');
     closeBtn.className = 'win-btn close';
@@ -1037,4 +1456,4 @@ contextMenu.addEventListener('click', (e) => {
 
 window.closeWindow = closeWindow;
 
-console.log('🖥️ CYBER_OS ready!');
+console.log('🖳 CYBER_OS ready!');
