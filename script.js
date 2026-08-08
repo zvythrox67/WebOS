@@ -110,8 +110,8 @@ const trackList = [
 ]
 
 const galleryFolders = [
-    { id: 'set-a', name: 'ARCHIVE_A', images: [1, 2, 3, 7, 8, 9, 10, 11] },
-    { id: 'set-b', name: 'ARCHIVE_B', images: [4, 5, 6, 12, 13, 14, 15, 16] }
+    { id: 'set-a', name: 'ARCHIVE_A', images: [1, 2, 3, 7, 8, 9, 10, 11, 19, 20, 22, 23] },
+    { id: 'set-b', name: 'ARCHIVE_B', images: [4, 5, 6, 12, 13, 14, 15, 16, 17, 18, 21] }
 ];
 
 const pgUsernames = [
@@ -174,13 +174,15 @@ function pgRandom(list) {
 function generatePosts(count) {
     const posts = [];
     for (let i = 0; i < count; i++) {
+        const imageNum = Math.floor(Math.random() * 15) + 1;
         posts.push({
             user: pgRandom(pgUsernames),
             caption: pgRandom(pgCaptions),
             likes: Math.floor(Math.random() * 4000) + 20,
             comments: Math.floor(Math.random() * 120),
             time: (Math.floor(Math.random() * 47) + 1) + 'h',
-            hue: Math.floor(Math.random() * 360)
+            hue: Math.floor(Math.random() * 360),
+            image: 'gallery/insta' + imageNum + '.png'
         });
     }
     return posts;
@@ -491,7 +493,7 @@ const APPS = {
             
             const art = document.createElement('div');
             art.className = 'music-art';
-            art.textContent = '📡';
+            art.textContent = '⋆༺𓆩☠︎︎𓆪༻⋆';
             
             const title = document.createElement('div');
             title.className = 'track-title mp-title';
@@ -610,7 +612,7 @@ const APPS = {
 
     gallery: {
         title: 'Gallery',
-        icon: '▧',
+        icon: '🗁',
         width: 420,
         height: 420,
 
@@ -712,21 +714,21 @@ const APPS = {
         }
     },
 
-    pixelgram: {
-        title: 'Pixelgram',
-        icon: '◉',
+    cybergram: {
+        title: 'Cybergram',
+        icon: '✦',
         width: 380,
         height: 560,
 
         createContent() {
             const container = document.createElement('div');
-            container.className = 'pixelgram';
+            container.className = 'cybergram';
 
             const topbar = document.createElement('div');
             topbar.className = 'pg-topbar';
             const logo = document.createElement('span');
             logo.className = 'pg-logo';
-            logo.textContent = 'PIXELGRAM';
+            logo.textContent = 'CYBERGRAM';
             topbar.appendChild(logo);
 
             const pages = document.createElement('div');
@@ -750,8 +752,8 @@ const APPS = {
 
             const tabs = [
                 { id: 'home', icon: '⌂', label: 'Home' },
-                { id: 'messages', icon: '✉', label: 'Messages' },
-                { id: 'profile', icon: '◍', label: 'Profile' }
+                { id: 'messages', icon: '⌯⌲', label: 'Messages' },
+                { id: 'profile', icon: '♡', label: 'Profile' }
             ];
 
             tabs.forEach((tab, i) => {
@@ -830,7 +832,13 @@ const APPS = {
                     head.appendChild(avatar);
                     head.appendChild(uname);
 
-                    const photo = buildPhoto(post.hue);
+                    const photo = document.createElement('div');
+                    photo.className = 'pg-photo';
+                    const img = document.createElement('img');
+                    img.src = post.image;
+                    img.alt = 'post image';
+                    img.style.cssText = 'width:100%;height:100%;object-fit:cover;';
+                    photo.appendChild(img);
 
                     const actions = document.createElement('div');
                     actions.className = 'pg-post-actions';
@@ -972,9 +980,19 @@ const APPS = {
                 const postsGrid = document.createElement('div');
                 postsGrid.className = 'pg-profile-grid';
 
-                for (let i = 0; i < 2; i++) {
-                    postsGrid.appendChild(buildPhoto(Math.floor(Math.random() * 360)));
-                }
+                for (let i = 0; i < 6; i++) {
+                    const imageNum = Math.floor(Math.random() * 15) + 1;
+                    const tile = document.createElement('div');
+                    tile.className = 'pg-profile-tile';
+                    
+                    const img = document.createElement('img');
+                    img.src = 'gallery/image' + imageNum + '.png';
+                    img.alt = 'post';
+                    img.style.cssText = 'width:100%;height:100%;object-fit:cover;';
+                    
+                    tile.appendChild(img);
+                    postsGrid.appendChild(tile);
+}
 
                 profilePage.appendChild(head);
                 profilePage.appendChild(uname);
@@ -1069,7 +1087,7 @@ const APPS = {
 
     about: {
         title: 'About',
-        icon: 'i',
+        icon: 'ⓘ',
         width: 300,
         height: 370,
         
@@ -1196,6 +1214,7 @@ function toggleMaximize(id) {
 }
 
 function openApp(id) {
+    console.log('openApp called with:', id);
     try {
         _openApp(id);
     } catch (err) {
@@ -1384,7 +1403,11 @@ Object.keys(APPS).forEach(id => {
     
     icon.appendChild(emoji);
     icon.appendChild(label);
-    icon.addEventListener('click', () => openApp(id));
+    icon.addEventListener('click', function(e) {
+        e.stopPropagation();
+        console.log('Icon clicked:', id);
+        openApp(id);
+    });
     iconsContainer.appendChild(icon);
 
     const item = document.createElement('div');

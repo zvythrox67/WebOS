@@ -845,8 +845,7 @@ gallery-app {
     display: flex;
 }
 
-/* Pixelgram */
-.pixelgram {
+.cybergram {
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -1046,6 +1045,20 @@ gallery-app {
     height: 8px;
     border-radius: 50%;
     background: var(--neon-blue);
+}
+.pg-profile-tile {
+    width: 100%;
+    aspect-ratio: 1/1;
+    background: #03040a;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--glow-line);
+}
+
+.pg-profile-tile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .pg-profile-head {
