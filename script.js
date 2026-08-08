@@ -121,10 +121,10 @@ const catSVGs = catArt.map(cat => {
 });
 
 const trackList = [
-    { title: 'neon rain protocol', mood: 'synthwave · night drive' },
+    { title: 'call of the night', mood: 'synthwave · night drive' },
     { title: 'ghost in the terminal', mood: 'darksynth · low fi' },
-    { title: 'cutting mat // 3am', mood: 'ambient · glitch' },
-    { title: 'firewall lullaby', mood: 'synthwave · slow' }
+    { title: 'neon haven', mood: 'ambient · glitch' },
+    { title: 'SuperNova lullaby', mood: 'synthwave · slow' }
 ]
 
 const APPS = {

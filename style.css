@@ -2,7 +2,7 @@
   --dark-bg: #05070C;
   --panel-bg: #0F1420;
   --neon-blue: #00F0FF;
-  --neon-pink: #FF2E92;
+  --neon-pink: #fe53a6;
   --neon-purple: #B14EFF;
   --neon-green: #39FF88;
   --text-color: #DCEBFF;
@@ -516,4 +516,199 @@ html, body {
     font-size: 13px;
     opacity: 0.6;
     letter-spacing: 1px;
+}
+
+.terminal {
+    background: #03060A;
+    color: var(--neon-green);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    height: 100%;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(57,255,136,0.2);
+}
+
+.term-output {
+    flex: 1;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    line-height: 1.55;
+}
+
+.term-input-line {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 6px;
+}
+
+.term-input-line span {
+    color: var(--neon-pink);
+    font-weight: 700;
+}
+
+.term-input {
+    flex: 1;
+    background: none;
+    border: none;
+    color: var(--neon-green);
+    font-family: inherit;
+    font-size: 13px;
+    outline: none;
+}
+
+#notes-area {
+    width: 100%;
+    height: calc(100% - 26px);
+    border: 1px solid var(--glow-line);
+    background: var(--dark-bg);
+    color: var(--text-color);
+    border-radius: var(--round-corners);
+    padding: calc(40% - 26px);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    resize: none;
+    outline: none;
+}
+
+.notes-status {
+    font-size: 11px;
+    color: var(--dim-text);
+    margin-top: 4px;
+    text-align: left;
+    font-family: 'Share Tech Mono', monospace;
+}
+
+.paint-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+}
+
+.swatch {
+    width: 20px;
+    height: 20px;
+    border-radius: 2px;
+    border: 2px solid var(--dark-bg);
+    box-shadow: 0 0 0 1px var(--glow-line);
+    cursor: pointer;
+}
+
+.swatch.active {
+    box-shadow: 0 0 0 2px var(--neon-blue);
+}
+
+#paint-canvas {
+    background: #03040a;
+    border-radius: var(--round-corners);
+    border: 1px solid var(--glow-line);
+    touch-action: none;
+    display: block;
+}
+
+.music-player {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 10px;
+}
+
+.music-art {
+    height: 110px;
+    border-radius: var(--round-corners);
+    background: linear-gradient(135deg, rgba(0,240,255,0.15), rgba(255,46,146,0.18));
+    border: 1px solid var(--glow-line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+}
+
+.track-title {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    text-align: center;
+    font-size: 13px;
+    color: var(--neon-blue);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.track-sub {
+    text-align: center;
+    font-size: 11px;
+    color: var(--dim-text);
+    font-family: 'Share Tech Mono', monospace;
+}
+
+.bar {
+    display: flex;
+    gap: 3px;
+    height: 26px;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.bars span {
+    width: 4px;
+    background: var(--neon-pink);
+    animation: barJump 1s ease-in-out infinite;
+}
+
+@keyframes barJump {
+    0%, 100% { height: 6px; }
+    50% { height: 24px; }
+}
+
+.music-controls {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    align-items: center;
+}
+
+.music-controls button {
+    border: 1px solid var(--glow-line);
+    background: var(--panel-bg);
+    color: var(--text-color);
+    width: 36px;
+    height: 36px;
+    border-radius: var(--round-corners);
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.music-controls button.play {
+    border-color: var(--neon-blue);
+    color: var(--neon-blue);
+    width: 44px;
+    height: 44px;
+    font-size: 16px;
+}
+
+.track-list {
+    overflow-y: auto;
+}
+
+.track-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 7px 8px;
+    border-radius: var(--round-corners);
+    font-size: 12px;
+    cursor: pointer;
+    font-family: 'Share Tech Mono', monospace;
+}
+
+.track-row:hover {
+    background: rgba(0,240,255,0.07);
+}
+
+.track-row.playing {
+    color: var(--neon-blue);
+    border: 1px solid var(--glow-line);
 }
