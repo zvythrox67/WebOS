@@ -566,7 +566,7 @@ html, body {
     background: var(--dark-bg);
     color: var(--text-color);
     border-radius: var(--round-corners);
-    padding: calc(40% - 26px);
+    padding: 12px;
     font-family: 'Share Tech Mono', monospace;
     font-size: 13px;
     resize: none;
@@ -711,4 +711,151 @@ html, body {
 .track-row.playing {
     color: var(--neon-blue);
     border: 1px solid var(--glow-line);
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 10px;
+}
+
+.gallery-card{
+    background: var(--dark-bg);
+    border: 1px solid var(--glow-line);
+    border-radius: var(--round-corners);
+    padding: 8px;
+    text-align: center;
+}
+
+.gallery-card svg {
+    width: 100%;
+    height: auto;
+}
+
+.gallery-card .cap {
+    font-size: 10px;
+    font-weight: 700;
+    margin-top: 4px;
+    color: var(--dim-text);
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: 1px;
+}
+
+.calc {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    height: 100%;
+}
+
+#calc-display {
+    background: #03040a;
+    color: var(--neon-green);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 22px;
+    text-align: right;
+    padding: 12px;
+    border: 1px solid rgba(57,255,136,0.25);
+    border-radius: var(--round-corners);
+    min-height: 20px;
+    word-break: break-all;
+}
+
+.calc-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    flex: 1;
+}
+
+.calc-grid button {
+    border: 1px solid var(--glow-line);
+    border-radius: var(--round-corners);
+    background: var(--panel-bg);
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    color: var(--text-color);
+    font-family: 'Share Tech Mono', monospace;
+}
+
+.calc-grid button.op {
+    color: var(--neon-blue);
+    border-color: var(--neon-blue);
+}
+
+.calc-grid button.eq {
+    color: var(--dark-bg);
+    background: var(--neon-pink);
+    grid-row: span 1;
+    border-color: var(--neon-pink);
+}
+
+.calc-grid button:hover {
+    filter: brightness(1.2);
+}
+
+.about-box{
+    text-align: center;
+}
+
+.about-box .ascii {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    white-space: pre;
+    line-height: 1.15;
+    color: var(--neon-blue);
+    text-align: left;
+    background: #03040a;
+    border: 1px solid var(--glow-line);
+    border-radius: var(--round-corners);
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.spec-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    padding: 5px 2px;
+    border-bottom: 1px dashed var(--glow-line);
+    font-family: 'Share Tech Mono', monospace;
+}
+
+.spec-row span:first-child {
+    color: var(--dim-text);
+}
+
+.trash-box {
+    text-align: center;
+    padding-top: 30px;
+}
+
+.trash-box .big {
+    font-size: 40px;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--panel-bg);
+    border: 1px solid var(--glow-line);
+}
+
+@media (max-width: 640px) {
+    #icons {
+        top: 10px;
+        left: 8px;
+    }
+    
+    .icon {
+        width: 72px;
+    }
+    
+    #open-windows {
+        display: none;
+    }
 }

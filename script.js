@@ -124,7 +124,12 @@ const trackList = [
     { title: 'call of the night', mood: 'synthwave · night drive' },
     { title: 'ghost in the terminal', mood: 'darksynth · low fi' },
     { title: 'neon haven', mood: 'ambient · glitch' },
-    { title: 'SuperNova lullaby', mood: 'synthwave · slow' }
+    { title: 'SuperNova lullaby', mood: 'synthwave · slow' },
+    { title: 'chrome heart failure', mood: 'low fi · night drive' },
+    { title: 'firewall town', mood: 'darksynth · hypnotic' },
+    { title: 'phantom symphony', mood: 'somber · cinematic' },
+    { title: 'Skyline', mood: 'grand · slow' },
+    { title: 'Glitch in the Soul', mood: 'Paranoid · hypnotic' },
 ]
 
 const APPS = {
@@ -646,13 +651,12 @@ const APPS = {
             
             const ascii = document.createElement('div');
             ascii.className = 'ascii';
-            ascii.textContent = '   /\\_/\\\n  ( 0.0 )\n   > ^ <   CYBER_OS v1.0';
+            ascii.textContent = '<   CYBER_OS v1.0    >';
             
             const specs = [
-                ['USER', 'cyberhacker'],
-                ['KERNEL', 'cyberpunk core'],
-                ['APPS', '7 installed'],
-                ['VIBE', 'cyberpunk']
+                ['USERNAME: ', 'zvythrox'],
+                ['APPS: ', '7 installed'],
+                ['VIBE: ', 'cyberpunk']
             ];
             
             container.appendChild(ascii);
@@ -674,7 +678,7 @@ const APPS = {
             
             const footer = document.createElement('p');
             footer.style.cssText = 'font-size:11px;margin-top:10px;opacity:0.6;';
-            footer.textContent = 'A personal cyberpunk desktop. Right-click for more options.';
+            footer.textContent = 'Hi! Welcome to my WebOS!';
             container.appendChild(footer);
             
             return container;
@@ -685,7 +689,7 @@ const APPS = {
 
     trash: {
         title: 'Trash',
-        icon: '⌫',
+        icon: '🗑',
         width: 260,
         height: 200,
         
