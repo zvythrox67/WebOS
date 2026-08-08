@@ -35,14 +35,23 @@ bootMessages.forEach((msg, i) => {
     }, i * 230 )
 });
 
+let bootHidden = false;
+function hideBoot() {
+    if (bootHidden) return;
+    bootHidden = true;
+
+    const boot = document.getElementById('boot');
+    if (!boot) return;
+
+    boot.classList.add('hide');
+    setTimeout(() => boot.remove(), 550);
+}
+
 window.addEventListener('load', () => {
-    setTimeout(() => {
-        document.getElementById('boot').classList.add('hide');
-        setTimeout(() => {
-            document.getElementById('boot').remove();
-        }, 550);
-    }, 1650);
-})
+    setTimeout(hideBoot, 1650);
+});
+
+setTimeout(hideBoot, 4000);
 
 function updateClock() {
     const clockEl = document.getElementById('clock');
@@ -101,10 +110,9 @@ const trackList = [
 ]
 
 const galleryFolders = [
-    {id: 'vault', name: 'VAULT_01', count: 12},
-    {id: 'dreamcore', name: 'DREAMCORE', count: 15},
-    {id: 'glitch', name:'GLITCH_ARCHIVE', count: 10}
-]
+    { id: 'set-a', name: 'ARCHIVE_A', images: [1, 2, 3, 7, 8, 9, 10, 11] },
+    { id: 'set-b', name: 'ARCHIVE_B', images: [4, 5, 6, 12, 13, 14, 15, 16] }
+];
 
 const pgUsernames = [
     'neon_wraith', 'glitch.queen', 'chrome_habit', 'nullhead_04', 'synth.siren',
@@ -235,8 +243,8 @@ const APPS = {
         },
 
         init(container) {
-            const output = document.getElementById('term-outputput');
-            const input = document.getElementById('term-in');
+            const output = container.querySelector('.term-output');
+            const input = container.querySelector('.term-input');
 
             function printLine(text){
                 output.textContent += text + "\n";
@@ -351,6 +359,8 @@ const APPS = {
                     status.textContent = 'saved ✓';
                 }, 500);
             });
+
+            textarea.focus();
         }
     },
 
@@ -378,20 +388,20 @@ const APPS = {
 
             const brushSize = document.createElement('input');
             brushSize.type = 'range';
-            brushSize.id = 'brush-size';
+            brushSize.className = 'brush-size';
             brushSize.min = '1';
             brushSize.max = '20';
             brushSize.value = '4';
             
             const clearBtn = document.createElement('button');
-            clearBtn.id = 'paint-clear';
+            clearBtn.className = 'paint-clear';
             clearBtn.textContent = 'CLEAR';
             
             toolbar.appendChild(brushSize);
             toolbar.appendChild(clearBtn);
 
             const canvas = document.createElement('canvas');
-            canvas.id = 'paint-canvas';
+            canvas.className = 'paint-canvas';
             canvas.width = 392;
             canvas.height = 300;
             
@@ -402,7 +412,7 @@ const APPS = {
         },
 
         init(container) {
-            const canvas = document.getElementById('paint-canvas');
+            const canvas = container.querySelector('.paint-canvas');
             const ctx = canvas.getContext('2d');
 
             ctx.fillStyle = '#03040a';
@@ -413,19 +423,19 @@ const APPS = {
             let brushSize = 4;
             let lastPos = null;
 
-            document.querySelectorAll('.swatch').forEach(swatch => {
+            container.querySelectorAll('.swatch').forEach(swatch => {
                 swatch.addEventListener('click', () => {
-                    document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+                    container.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
                     swatch.classList.add('active');
                     currentColor = swatch.dataset.color;
                 });
             });
 
-            document.querySelector('brush-size').addEventListener('input', (e) => {
+            container.querySelector('.brush-size').addEventListener('input', (e) => {
                 brushSize = parseInt(e.target.value, 10);
             });
 
-            document.querySelector('paint-clear').addEventListener('click', () => {
+            container.querySelector('.paint-clear').addEventListener('click', () => {
                 ctx.fillStyle = '#03040a';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
             });
@@ -471,7 +481,7 @@ const APPS = {
     },
     music: {
         title: 'Music',
-        icon: '𝄞',
+        icon: '♪',
         width: 300,
         height: 360,
         
@@ -481,7 +491,7 @@ const APPS = {
             
             const art = document.createElement('div');
             art.className = 'music-art';
-            art.textContent = '⋆༺𓆩☠︎︎𓆪༻⋆';
+            art.textContent = '📡';
             
             const title = document.createElement('div');
             title.className = 'track-title mp-title';
@@ -504,16 +514,15 @@ const APPS = {
             controls.className = 'music-controls';
             
             const prevBtn = document.createElement('button');
-            prevBtn.id = 'mp-prev';
+            prevBtn.className = 'mp-prev';
             prevBtn.textContent = '⏮';
             
             const playBtn = document.createElement('button');
-            playBtn.id = 'mp-play';
-            playBtn.className = 'play';
+            playBtn.className = 'play mp-play';
             playBtn.textContent = '▶';
             
             const nextBtn = document.createElement('button');
-            nextBtn.id = 'mp-next';
+            nextBtn.className = 'mp-next';
             nextBtn.textContent = '⏭';
             
             controls.appendChild(prevBtn);
@@ -521,7 +530,7 @@ const APPS = {
             controls.appendChild(nextBtn);
             
             const list = document.createElement('div');
-            list.className = 'track-list';
+            list.className = 'track-list mp-list';
             
             container.appendChild(art);
             container.appendChild(title);
@@ -533,7 +542,7 @@ const APPS = {
             return container;
         },
         
-        init() {
+        init(container) {
             let currentTrack = 0;
             let isPlaying = false;
 
@@ -580,12 +589,12 @@ const APPS = {
                 renderTrackList();
             }
 
-            container.querySelector('.mp-play').addEventListener('click', () => {
+            playBtn.addEventListener('click', () => {
                 isPlaying = !isPlaying;
                 updateDisplay();
             });
 
-            container.querySelector('mp-prev').addEventListener('click', () => {
+            container.querySelector('.mp-prev').addEventListener('click', () => {
                 currentTrack = (currentTrack - 1 + trackList.length) % trackList.length;
                 updateDisplay();
             });
@@ -601,179 +610,179 @@ const APPS = {
 
     gallery: {
         title: 'Gallery',
-        icon: '🅾',
+        icon: '▧',
         width: 420,
         height: 420,
- 
+
         createContent() {
             const container = document.createElement('div');
             container.className = 'gallery-app';
             return container;
         },
- 
+
         init(container) {
             function renderFolders() {
                 container.innerHTML = '';
- 
+
                 const grid = document.createElement('div');
                 grid.className = 'gallery-folders';
- 
+
                 galleryFolders.forEach(folder => {
                     const card = document.createElement('div');
                     card.className = 'folder-card';
- 
+
                     const icon = document.createElement('div');
                     icon.className = 'folder-icon';
                     icon.textContent = '📁';
- 
+
                     const name = document.createElement('div');
                     name.className = 'folder-name';
                     name.textContent = folder.name;
- 
+
                     const count = document.createElement('div');
                     count.className = 'folder-count';
-                    count.textContent = folder.count + ' photos';
- 
+                    count.textContent = folder.images.length + ' photos';
+
                     card.appendChild(icon);
                     card.appendChild(name);
                     card.appendChild(count);
- 
+
                     card.addEventListener('click', () => renderPhotos(folder));
                     grid.appendChild(card);
                 });
- 
+
                 container.appendChild(grid);
             }
- 
+
             function renderPhotos(folder) {
                 container.innerHTML = '';
- 
+
                 const header = document.createElement('div');
                 header.className = 'gallery-header';
- 
+
                 const backBtn = document.createElement('button');
                 backBtn.className = 'gallery-back';
                 backBtn.textContent = '← BACK';
                 backBtn.addEventListener('click', renderFolders);
- 
+
                 const title = document.createElement('div');
                 title.className = 'gallery-folder-title';
                 title.textContent = folder.name;
- 
+
                 header.appendChild(backBtn);
                 header.appendChild(title);
                 container.appendChild(header);
- 
+
                 const photoGrid = document.createElement('div');
                 photoGrid.className = 'gallery-photos';
- 
-                for (let i = 1; i <= folder.count; i++) {
+
+                folder.images.forEach(i => {
                     const tile = document.createElement('div');
                     tile.className = 'photo-tile';
- 
+
                     const img = document.createElement('img');
-                    img.src = 'images/' + folder.id + '/image' + i + '.png';
+                    img.src = 'gallery/image' + i + '.png';
                     img.alt = 'image' + i + '.png';
                     img.loading = 'lazy';
- 
+
                     const fallback = document.createElement('div');
                     fallback.className = 'photo-fallback';
- 
+
                     const fbIcon = document.createElement('span');
                     fbIcon.textContent = '🖼';
                     const fbLabel = document.createElement('small');
                     fbLabel.textContent = 'image' + i + '.png';
- 
+
                     fallback.appendChild(fbIcon);
                     fallback.appendChild(fbLabel);
- 
+
                     img.addEventListener('error', () => {
                         tile.classList.add('broken');
                     });
- 
+
                     tile.appendChild(img);
                     tile.appendChild(fallback);
                     photoGrid.appendChild(tile);
-                }
- 
+                });
+
                 container.appendChild(photoGrid);
             }
- 
+
             renderFolders();
         }
     },
- 
+
     pixelgram: {
-        title: 'Cybergram',
-        icon: '❤',
+        title: 'Pixelgram',
+        icon: '◉',
         width: 380,
         height: 560,
- 
+
         createContent() {
             const container = document.createElement('div');
             container.className = 'pixelgram';
- 
+
             const topbar = document.createElement('div');
             topbar.className = 'pg-topbar';
             const logo = document.createElement('span');
             logo.className = 'pg-logo';
             logo.textContent = 'PIXELGRAM';
             topbar.appendChild(logo);
- 
+
             const pages = document.createElement('div');
             pages.className = 'pg-pages';
- 
+
             const home = document.createElement('div');
             home.className = 'pg-page pg-home active';
- 
+
             const messages = document.createElement('div');
             messages.className = 'pg-page pg-messages';
- 
+
             const profile = document.createElement('div');
             profile.className = 'pg-page pg-profile';
- 
+
             pages.appendChild(home);
             pages.appendChild(messages);
             pages.appendChild(profile);
- 
+
             const tabbar = document.createElement('div');
             tabbar.className = 'pg-tabbar';
- 
+
             const tabs = [
                 { id: 'home', icon: '⌂', label: 'Home' },
                 { id: 'messages', icon: '✉', label: 'Messages' },
                 { id: 'profile', icon: '◍', label: 'Profile' }
             ];
- 
+
             tabs.forEach((tab, i) => {
                 const btn = document.createElement('button');
                 btn.className = 'pg-tab' + (i === 0 ? ' active' : '');
                 btn.dataset.tab = tab.id;
- 
+
                 const iconSpan = document.createElement('span');
                 iconSpan.textContent = tab.icon;
                 const labelSmall = document.createElement('small');
                 labelSmall.textContent = tab.label;
- 
+
                 btn.appendChild(iconSpan);
                 btn.appendChild(labelSmall);
                 tabbar.appendChild(btn);
             });
- 
+
             container.appendChild(topbar);
             container.appendChild(pages);
             container.appendChild(tabbar);
- 
+
             return container;
         },
- 
+
         init(container) {
             const homePage = container.querySelector('.pg-home');
             const messagesPage = container.querySelector('.pg-messages');
             const profilePage = container.querySelector('.pg-profile');
             const tabs = container.querySelectorAll('.pg-tab');
             const pages = { home: homePage, messages: messagesPage, profile: profilePage };
- 
+
             tabs.forEach(tab => {
                 tab.addEventListener('click', () => {
                     tabs.forEach(t => t.classList.remove('active'));
@@ -782,14 +791,14 @@ const APPS = {
                     pages[tab.dataset.tab].classList.add('active');
                 });
             });
- 
+
             function buildPhoto(hue) {
                 const photo = document.createElement('div');
                 photo.className = 'pg-photo';
                 photo.style.background = 'linear-gradient(135deg, hsl(' + hue + ',80%,55%), hsl(' + ((hue + 70) % 360) + ',75%,45%))';
                 return photo;
             }
- 
+
             function buildAvatar(sizeClass, hue, letter) {
                 const avatar = document.createElement('div');
                 avatar.className = 'pg-avatar' + (sizeClass ? ' ' + sizeClass : '');
@@ -797,18 +806,18 @@ const APPS = {
                 avatar.textContent = letter;
                 return avatar;
             }
- 
+
             function renderHome() {
                 const posts = generatePosts(20);
                 posts.forEach(post => {
                     const card = document.createElement('div');
                     card.className = 'pg-post';
- 
+
                     const head = document.createElement('div');
                     head.className = 'pg-post-head';
- 
+
                     const avatar = buildAvatar('', post.hue, post.user.charAt(0).toUpperCase());
- 
+
                     const uname = document.createElement('div');
                     uname.className = 'pg-post-user';
                     const unameB = document.createElement('b');
@@ -817,35 +826,35 @@ const APPS = {
                     unameS.textContent = post.time + ' ago';
                     uname.appendChild(unameB);
                     uname.appendChild(unameS);
- 
+
                     head.appendChild(avatar);
                     head.appendChild(uname);
- 
+
                     const photo = buildPhoto(post.hue);
- 
+
                     const actions = document.createElement('div');
                     actions.className = 'pg-post-actions';
- 
+
                     const likeBtn = document.createElement('button');
                     likeBtn.className = 'pg-like-btn';
                     likeBtn.textContent = '♡';
- 
+
                     const commentIcon = document.createElement('span');
                     commentIcon.textContent = '💬';
- 
+
                     const shareIcon = document.createElement('span');
                     shareIcon.textContent = '↗';
- 
+
                     actions.appendChild(likeBtn);
                     actions.appendChild(commentIcon);
                     actions.appendChild(shareIcon);
- 
+
                     const likesRow = document.createElement('div');
                     likesRow.className = 'pg-likes';
                     let likeCount = post.likes;
                     let liked = false;
                     likesRow.textContent = likeCount.toLocaleString() + ' likes';
- 
+
                     likeBtn.addEventListener('click', () => {
                         liked = !liked;
                         likeBtn.textContent = liked ? '♥' : '♡';
@@ -853,38 +862,38 @@ const APPS = {
                         likeCount += liked ? 1 : -1;
                         likesRow.textContent = likeCount.toLocaleString() + ' likes';
                     });
- 
+
                     const captionRow = document.createElement('div');
                     captionRow.className = 'pg-caption';
                     const capB = document.createElement('b');
                     capB.textContent = post.user;
                     captionRow.appendChild(capB);
                     captionRow.appendChild(document.createTextNode(' ' + post.caption));
- 
+
                     const commentsRow = document.createElement('div');
                     commentsRow.className = 'pg-comments-link';
                     commentsRow.textContent = post.comments > 0 ? 'View all ' + post.comments + ' comments' : 'No comments yet';
- 
+
                     card.appendChild(head);
                     card.appendChild(photo);
                     card.appendChild(actions);
                     card.appendChild(likesRow);
                     card.appendChild(captionRow);
                     card.appendChild(commentsRow);
- 
+
                     homePage.appendChild(card);
                 });
             }
- 
+
             function renderMessages() {
                 const convos = generateMessages(5);
                 convos.forEach(convo => {
                     const row = document.createElement('div');
                     row.className = 'pg-msg-row' + (convo.unread ? ' unread' : '');
- 
+
                     const hue = Math.floor(Math.random() * 360);
                     const avatar = buildAvatar('sm', hue, convo.user.charAt(0).toUpperCase());
- 
+
                     const info = document.createElement('div');
                     info.className = 'pg-msg-info';
                     const infoB = document.createElement('b');
@@ -893,7 +902,7 @@ const APPS = {
                     infoS.textContent = convo.msg;
                     info.appendChild(infoB);
                     info.appendChild(infoS);
- 
+
                     const meta = document.createElement('div');
                     meta.className = 'pg-msg-meta';
                     const metaS = document.createElement('small');
@@ -904,36 +913,36 @@ const APPS = {
                         dot.className = 'dot';
                         meta.appendChild(dot);
                     }
- 
+
                     row.appendChild(avatar);
                     row.appendChild(info);
                     row.appendChild(meta);
- 
+
                     row.addEventListener('click', () => {
                         row.classList.remove('unread');
                     });
- 
+
                     messagesPage.appendChild(row);
                 });
             }
- 
+
             function renderProfile() {
                 const profile = generateProfile();
- 
+
                 const head = document.createElement('div');
                 head.className = 'pg-profile-head';
- 
+
                 const avatar = buildAvatar('lg', 195, profile.username.charAt(0).toUpperCase());
- 
+
                 const stats = document.createElement('div');
                 stats.className = 'pg-stats';
- 
+
                 const statData = [
                     ['2', 'Posts'],
                     [String(profile.followers), 'Followers'],
                     [String(profile.following), 'Following']
                 ];
- 
+
                 statData.forEach(([num, label]) => {
                     const statBox = document.createElement('div');
                     const b = document.createElement('b');
@@ -944,36 +953,36 @@ const APPS = {
                     statBox.appendChild(small);
                     stats.appendChild(statBox);
                 });
- 
+
                 head.appendChild(avatar);
                 head.appendChild(stats);
- 
+
                 const uname = document.createElement('div');
                 uname.className = 'pg-profile-name';
                 uname.textContent = profile.username;
- 
+
                 const bio = document.createElement('div');
                 bio.className = 'pg-profile-bio';
                 bio.textContent = profile.bio;
- 
+
                 const editBtn = document.createElement('button');
                 editBtn.className = 'pg-edit-btn';
                 editBtn.textContent = 'EDIT PROFILE';
- 
+
                 const postsGrid = document.createElement('div');
                 postsGrid.className = 'pg-profile-grid';
- 
+
                 for (let i = 0; i < 2; i++) {
                     postsGrid.appendChild(buildPhoto(Math.floor(Math.random() * 360)));
                 }
- 
+
                 profilePage.appendChild(head);
                 profilePage.appendChild(uname);
                 profilePage.appendChild(bio);
                 profilePage.appendChild(editBtn);
                 profilePage.appendChild(postsGrid);
             }
- 
+
             renderHome();
             renderMessages();
             renderProfile();
@@ -991,7 +1000,7 @@ const APPS = {
             container.className = 'calc';
             
             const display = document.createElement('div');
-            display.id = 'calc-display';
+            display.className = 'calc-display';
             display.textContent = '0';
             
             const grid = document.createElement('div');
@@ -1021,7 +1030,7 @@ const APPS = {
         },
         
         init(container) {
-            const display = container.querySelector('#calc-display');
+            const display = container.querySelector('.calc-display');
             let expression = '';
 
             container.querySelectorAll('.calc-grid button').forEach(btn => {
@@ -1060,7 +1069,7 @@ const APPS = {
 
     about: {
         title: 'About',
-        icon: '✴︎',
+        icon: 'i',
         width: 300,
         height: 370,
         
@@ -1074,7 +1083,7 @@ const APPS = {
             
             const specs = [
                 ['USERNAME: ', 'zvythrox'],
-                ['APPS: ', '8 installed'],
+                ['APPS: ', '9 installed'],
                 ['VIBE: ', 'cyberpunk']
             ];
             
@@ -1118,7 +1127,7 @@ const APPS = {
             
             const big = document.createElement('div');
             big.className = 'big';
-            big.textContent = '🗑';
+            big.textContent = '⌫';
             
             const msg = document.createElement('p');
             msg.textContent = 'Empty. Too tidy for your own good.';
@@ -1132,7 +1141,6 @@ const APPS = {
         init() {}
     }
 };
-
 const windowLayer = document.getElementById('windows-layer');
 const taskbarWindows = document.getElementById('open-windows');
 const openWindows = {};
@@ -1188,6 +1196,14 @@ function toggleMaximize(id) {
 }
 
 function openApp(id) {
+    try {
+        _openApp(id);
+    } catch (err) {
+        console.error('CYBER_OS: failed to open app "' + id + '"', err);
+    }
+}
+
+function _openApp(id) {
     if (openWindows[id]) {
         if (openWindows[id].element.style.display === 'none') {
             toggleMinimize(id);
@@ -1197,6 +1213,10 @@ function openApp(id) {
     }
 
     const app = APPS[id];
+    if (!app) {
+        console.error('CYBER_OS: no app registered with id "' + id + '"');
+        return;
+    }
 
     const maxWidth = Math.min(app.width, window.innerWidth - 30);
     const maxHeight = Math.min(app.height, window.innerHeight - 106);
@@ -1228,7 +1248,7 @@ function openApp(id) {
     
     const maxBtn = document.createElement('button');
     maxBtn.className = 'win-btn max';
-    maxBtn.textContent = '⛶';
+    maxBtn.textContent = '▢';
     
     const closeBtn = document.createElement('button');
     closeBtn.className = 'win-btn close';
@@ -1342,7 +1362,7 @@ function openApp(id) {
         isResizing = false;
     });
 
-    if (app.init) app.init();
+    if (app.init) app.init(appContent);
 }
 
 const iconsContainer = document.getElementById('icons');
@@ -1456,4 +1476,4 @@ contextMenu.addEventListener('click', (e) => {
 
 window.closeWindow = closeWindow;
 
-console.log('🖳 CYBER_OS ready!');
+console.log('🖥️ CYBER_OS ready!');
