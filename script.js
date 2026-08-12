@@ -211,6 +211,315 @@ function generateProfile() {
 }
 
 const APPS = {
+
+    settings: {
+        title: 'Settings',
+        icon: '⚙',
+        width: 460,
+        height: 520,
+
+        createContent() {
+            const container = document.createElement('div');
+            container.style.cssText = 'padding: 4px; display: flex; flex-direction: column; gap: 14px; height: 100%; overflow-y: auto;';
+
+            const cursorSection = document.createElement('div');
+            cursorSection.style.cssText = 'border-bottom: 1px solid var(--glow-line); padding-bottom: 14px;';
+
+            const cursorTitle = document.createElement('div');
+            cursorTitle.style.cssText = 'font-family: Orbitron, sans-serif; font-size: 12px; letter-spacing: 1px; color: var(--neon-blue); margin-bottom: 10px;';
+            cursorTitle.textContent = '✦ CURSOR STYLE';
+
+            const cursorOptions = document.createElement('div');
+            cursorOptions.style.cssText = 'display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; margin-bottom: 10px;';
+
+            const cursorStyles = [
+                { id: 'default', label: 'Default', value: 'default' },
+            ];
+
+            const savedCursor = getData('cursor-style') || 'default';
+
+            cursorStyles.forEach(c => {
+                const btn = document.createElement('button');
+                btn.style.cssText = `
+                    padding: 8px 4px;
+                    border: 2px solid ${savedCursor === c.value ? 'var(--neon-blue)' : 'var(--glow-line)'};
+                    border-radius: var(--round-corners);
+                    background: ${savedCursor === c.value ? 'rgba(0,240,255,0.12)' : 'var(--panel-bg)'};
+                    color: var(--text-color);
+                    cursor: pointer;
+                    font-family: inherit;
+                    font-size: 11px;
+                    font-weight: 600;
+                    transition: all 0.2s;
+                    text-align: center;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 4px;
+                `;
+                
+                const preview = document.createElement('span');
+                preview.style.cssText = 'font-size: 20px;';
+                const cursorIcons = {
+                    'default': '↖',
+                };
+                
+                const label = document.createElement('span');
+                label.textContent = c.label;
+                label.style.cssText = 'font-size: 10px; opacity: 0.8;';
+                
+                btn.appendChild(preview);
+                btn.appendChild(label);
+                btn.dataset.cursor = c.value;
+
+                btn.addEventListener('click', () => {
+                    document.body.style.cursor = c.value;
+                    saveData('cursor-style', c.value);
+                    cursorOptions.querySelectorAll('button').forEach(b => {
+                        b.style.borderColor = 'var(--glow-line)';
+                        b.style.background = 'var(--panel-bg)';
+                    });
+                    btn.style.borderColor = 'var(--neon-blue)';
+                    btn.style.background = 'rgba(0,240,255,0.12)';
+                });
+
+                btn.addEventListener('mouseenter', () => {
+                    if (savedCursor !== c.value) {
+                        document.body.style.cursor = c.value;
+                    }
+                });
+                btn.addEventListener('mouseleave', () => {
+                    document.body.style.cursor = savedCursor;
+                });
+
+                cursorOptions.appendChild(btn);
+            });
+
+            const colorSection = document.createElement('div');
+            colorSection.style.cssText = 'display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 4px;';
+
+            const colorLabel = document.createElement('span');
+            colorLabel.style.cssText = 'font-size: 12px; color: var(--dim-text); font-family: Share Tech Mono, monospace;';
+            colorLabel.textContent = 'Cursor Color:';
+
+            const colorPicker = document.createElement('input');
+            colorPicker.type = 'color';
+            colorPicker.style.cssText = 'width: 36px; height: 36px; border: 1px solid var(--glow-line); border-radius: var(--round-corners); background: none; cursor: pointer; padding: 2px;';
+            const savedColor = getData('cursor-color') || '#00F0FF';
+            colorPicker.value = savedColor;
+
+            function applyCursorColor(color) {
+                const hex = color.replace('#', '');
+                const r = parseInt(hex.substring(0, 2), 16);
+                const g = parseInt(hex.substring(2, 4), 16);
+                const b = parseInt(hex.substring(4, 6), 16);
+                
+                const style = document.createElement('style');
+                style.id = 'cursor-style';
+                style.textContent = `
+                    * {
+                        cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M4 2l12 12-4 4-12-12 4-4z' fill='${encodeURIComponent(color)}' opacity='0.8'/%3E%3C/svg%3E") 4 4, auto !important;
+                    }
+                `;
+                
+                const oldStyle = document.getElementById('cursor-style');
+                if (oldStyle) oldStyle.remove();
+                document.head.appendChild(style);
+                
+                saveData('cursor-color', color);
+            }
+
+            colorPicker.addEventListener('input', (e) => {
+                const c = e.target.value;
+                applyCursorColor(c);
+            });
+
+            if (savedColor) {
+                setTimeout(() => applyCursorColor(savedColor), 100);
+            }
+
+            colorSection.appendChild(colorLabel);
+            colorSection.appendChild(colorPicker);
+            
+            cursorSection.appendChild(cursorTitle);
+            cursorSection.appendChild(cursorOptions);
+            cursorSection.appendChild(colorSection);
+            container.appendChild(cursorSection);
+
+            const wallpaperSection = document.createElement('div');
+            wallpaperSection.style.cssText = 'padding-bottom: 10px;';
+
+            const wpTitle = document.createElement('div');
+            wpTitle.style.cssText = 'font-family: Orbitron, sans-serif; font-size: 12px; letter-spacing: 1px; color: var(--neon-blue); margin-bottom: 10px;';
+            wpTitle.textContent = '✦ WALLPAPER';
+
+            const colorWpRow = document.createElement('div');
+            colorWpRow.style.cssText = 'display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap;';
+
+            const colorWpLabel = document.createElement('span');
+            colorWpLabel.style.cssText = 'font-size: 12px; color: var(--dim-text); font-family: Share Tech Mono, monospace;';
+            colorWpLabel.textContent = 'Solid Color:';
+
+            const colorWpPicker = document.createElement('input');
+            colorWpPicker.type = 'color';
+            colorWpPicker.style.cssText = 'width: 36px; height: 36px; border: 1px solid var(--glow-line); border-radius: var(--round-corners); background: none; cursor: pointer; padding: 2px;';
+            const savedWpColor = getData('wallpaper-color') || '#0a0a12';
+            colorWpPicker.value = savedWpColor;
+
+            const applyColorBtn = document.createElement('button');
+            applyColorBtn.style.cssText = `
+                padding: 6px 16px;
+                border: 1px solid var(--glow-line);
+                border-radius: var(--round-corners);
+                background: var(--panel-bg);
+                color: var(--text-color);
+                cursor: pointer;
+                font-family: inherit;
+                font-size: 12px;
+                font-weight: 600;
+                transition: all 0.2s;
+            `;
+            applyColorBtn.textContent = 'Apply';
+
+            applyColorBtn.addEventListener('click', () => {
+                const c = colorWpPicker.value;
+                const desktop = document.getElementById('desktop');
+                desktop.style.background = c;
+                desktop.style.backgroundImage = 'none';
+                saveData('wallpaper-color', c);
+                saveData('wallpaper-type', 'color');
+                document.querySelectorAll('.wp-image-card').forEach(card => {
+                    card.style.borderColor = 'var(--glow-line)';
+                    const check = card.querySelector('.wp-check');
+                    if (check) check.style.display = 'none';
+                });
+            });
+
+            colorWpRow.appendChild(colorWpLabel);
+            colorWpRow.appendChild(colorWpPicker);
+            colorWpRow.appendChild(applyColorBtn);
+
+            const imageWpLabel = document.createElement('div');
+            imageWpLabel.style.cssText = 'font-size: 12px; color: var(--dim-text); font-family: Share Tech Mono, monospace; margin: 8px 0 6px;';
+            imageWpLabel.textContent = 'Gallery Images:';
+
+            const imageGrid = document.createElement('div');
+            imageGrid.style.cssText = 'display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; margin-top: 4px;';
+
+            const savedWpType = getData('wallpaper-type');
+            const savedWpImage = getData('wallpaper-image');
+
+            for (let i = 1; i <= 3; i++) {
+                const imgPath = 'gallery/wallpaper' + i + '.png';
+                const isSelected = savedWpType === 'image' && savedWpImage === imgPath;
+
+                const card = document.createElement('div');
+                card.className = 'wp-image-card';
+                card.style.cssText = `
+                    border: 2px solid ${isSelected ? 'var(--neon-blue)' : 'var(--glow-line)'};
+                    border-radius: var(--round-corners);
+                    overflow: hidden;
+                    cursor: pointer;
+                    aspect-ratio: 16/9;
+                    background: var(--dark-bg);
+                    transition: all 0.2s;
+                    position: relative;
+                `;
+
+                const img = document.createElement('img');
+                img.src = imgPath;
+                img.alt = 'Wallpaper ' + i;
+                img.style.cssText = 'width: 100%; height: 100%; object-fit: cover; display: block;';
+
+                img.addEventListener('error', () => {
+                    img.style.display = 'none';
+                    const fallback = document.createElement('div');
+                    fallback.style.cssText = 'width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: var(--dim-text); font-size: 24px; flex-direction: column; gap: 4px;';
+                    fallback.innerHTML = `🖼<span style="font-size:9px;">wallpaper${i}</span>`;
+                    card.appendChild(fallback);
+                });
+
+                const checkmark = document.createElement('div');
+                checkmark.className = 'wp-check';
+                checkmark.style.cssText = `
+                    position: absolute;
+                    top: 4px;
+                    right: 4px;
+                    background: var(--neon-blue);
+                    color: var(--dark-bg);
+                    border-radius: 50%;
+                    width: 20px;
+                    height: 20px;
+                    display: ${isSelected ? 'flex' : 'none'};
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 11px;
+                    font-weight: 700;
+                `;
+                checkmark.textContent = '✓';
+
+                card.appendChild(img);
+                card.appendChild(checkmark);
+
+                card.addEventListener('click', () => {
+                    const desktop = document.getElementById('desktop');
+                    desktop.style.background = `url(${imgPath}) center/cover no-repeat`;
+                    saveData('wallpaper-image', imgPath);
+                    saveData('wallpaper-type', 'image');
+
+                    document.querySelectorAll('.wp-image-card').forEach(c => {
+                        c.style.borderColor = 'var(--glow-line)';
+                        const check = c.querySelector('.wp-check');
+                        if (check) check.style.display = 'none';
+                    });
+                    card.style.borderColor = 'var(--neon-blue)';
+                    checkmark.style.display = 'flex';
+                });
+
+                card.addEventListener('mouseenter', () => {
+                    if (!isSelected) {
+                        card.style.borderColor = 'rgba(0,240,255,0.4)';
+                    }
+                });
+                card.addEventListener('mouseleave', () => {
+                    if (!isSelected) {
+                        card.style.borderColor = 'var(--glow-line)';
+                    }
+                });
+
+                imageGrid.appendChild(card);
+            }
+
+            wallpaperSection.appendChild(wpTitle);
+            wallpaperSection.appendChild(colorWpRow);
+            wallpaperSection.appendChild(imageWpLabel);
+            wallpaperSection.appendChild(imageGrid);
+            container.appendChild(wallpaperSection);
+
+            const savedWpType2 = getData('wallpaper-type');
+            const desktop = document.getElementById('desktop');
+            if (savedWpType2 === 'color') {
+                const c = getData('wallpaper-color');
+                if (c) {
+                    desktop.style.background = c;
+                    desktop.style.backgroundImage = 'none';
+                }
+            } else if (savedWpType2 === 'image') {
+                const img = getData('wallpaper-image');
+                if (img) {
+                    desktop.style.background = `url(${img}) center/cover no-repeat`;
+                }
+            }
+
+            const footer = document.createElement('div');
+            footer.style.cssText = 'font-size: 11px; color: var(--dim-text); text-align: center; padding-top: 6px; font-family: Share Tech Mono, monospace; opacity: 0.5; border-top: 1px solid var(--glow-line); padding-top: 10px;';
+            footer.textContent = '⚙ settings save automatically';
+            container.appendChild(footer);
+
+            return container;
+        },
+        init() {}
+    },
     terminal: {
         title: 'Terminal',
         icon: '⌨',
@@ -1307,7 +1616,7 @@ const APPS = {
             
             const specs = [
                 ['USERNAME: ', 'zvythrox'],
-                ['APPS: ', '9 installed'],
+                ['APPS: ', '11 installed'],
                 ['VIBE: ', 'cyberpunk']
             ];
             
