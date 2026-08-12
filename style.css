@@ -138,19 +138,22 @@ html, body {
     top: 20px;
     left: 16px;
     display: flex;
-    flex-direction: column;
-    gap: 6px;
-    flex-wrap: wrap;
-    height: calc(100% - 40px);
+    grid-template-columns: repeat(6, 88px);
+    gap: 8px 12px;
+    z-index: 5;
+    pointer-events: auto;
 }
 
 .icon {
     width: 88px;
     padding: 10px 4px 8px;
     text-align: center;
-    cursor: pointer;
     border: 1px solid transparent;
     border-radius: var(--round-corners);
+    pointer-events: auto;
+    cursor: pointer;
+    position: relative;
+    z-index: 101;
 }
 
 .icon:hover {
@@ -165,6 +168,7 @@ html, body {
 .icon .emoji {
     width: 44px;
     height: 44px;
+    margin: 0 auto 5px;
     border-radius: var(--round-corners);
     background: var(--panel-bg);
     border: 1px solid var(--glow-line);
@@ -218,6 +222,8 @@ html, body {
 #windows-layer {
     position: absolute;
     inset: 0;
+    pointer-events: none;
+    z-index: 10;
 }
 
 .window {
@@ -231,6 +237,7 @@ html, body {
     min-width: 260px;
     min-height: 180px;
     border: 1px solid var(--glow-line);
+    pointer-events: auto;
 }
 
 .window.maximized {
@@ -713,7 +720,7 @@ html, body {
     border: 1px solid var(--glow-line);
 }
 
-gallery-app {
+.gallery-app {
     display: flex;
     flex-direction: column;
     gap: 10px;

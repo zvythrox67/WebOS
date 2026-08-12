@@ -946,7 +946,7 @@ const APPS = {
                 stats.className = 'pg-stats';
 
                 const statData = [
-                    ['2', 'Posts'],
+                    ['6', 'Posts'],
                     [String(profile.followers), 'Followers'],
                     [String(profile.following), 'Following']
                 ];
@@ -1004,6 +1004,212 @@ const APPS = {
             renderHome();
             renderMessages();
             renderProfile();
+        }
+    },
+
+    browser: {
+        title: 'Browser',
+        icon: '🌐',
+        width: 600,
+        height: 500,
+
+        createContent() {
+            const container = document.createElement('div');
+            container.style.cssText = 'display: flex; flex-direction: column; height: 100%; gap: 8px;';
+
+            const urlBar = document.createElement('div');
+            urlBar.style.cssText = 'display: flex; gap: 8px; align-items: center; flex-shrink: 0;';
+
+            const backBtn = document.createElement('button');
+            backBtn.style.cssText = `
+                padding: 6px 10px;
+                border: 1px solid var(--glow-line);
+                border-radius: var(--round-corners);
+                background: var(--panel-bg);
+                color: var(--text-color);
+                cursor: pointer;
+                font-size: 14px;
+                transition: all 0.2s;
+            `;
+            backBtn.textContent = '◀';
+            backBtn.id = 'browser-back';
+
+            const urlInput = document.createElement('input');
+            urlInput.type = 'text';
+            urlInput.placeholder = 'Enter URL...';
+            urlInput.style.cssText = `
+                flex: 1;
+                padding: 8px 12px;
+                border: 1px solid var(--glow-line);
+                border-radius: var(--round-corners);
+                background: var(--dark-bg);
+                color: var(--text-color);
+                font-family: 'Share Tech Mono', monospace;
+                font-size: 13px;
+                outline: none;
+            `;
+            urlInput.id = 'browser-url';
+
+            const goBtn = document.createElement('button');
+            goBtn.style.cssText = `
+                padding: 8px 16px;
+                border: 1px solid var(--neon-blue);
+                border-radius: var(--round-corners);
+                background: rgba(0,240,255,0.1);
+                color: var(--neon-blue);
+                cursor: pointer;
+                font-family: Orbitron, sans-serif;
+                font-size: 11px;
+                font-weight: 700;
+                letter-spacing: 1px;
+                transition: all 0.2s;
+            `;
+            goBtn.textContent = 'GO';
+            goBtn.id = 'browser-go';
+
+            urlBar.appendChild(backBtn);
+            urlBar.appendChild(urlInput);
+            urlBar.appendChild(goBtn);
+
+            const proxyUrl = 'https://corsproxy.io/?';
+
+            const iframe = document.createElement('iframe');
+            iframe.style.cssText = `
+                flex: 1;
+                border: 1px solid var(--glow-line);
+                border-radius: var(--round-corners);
+                background: #fff;
+                width: 100%;
+                min-height: 350px;
+            `;
+            iframe.id = 'browser-frame';
+            iframe.sandbox = 'allow-same-origin allow-scripts allow-popups allow-forms allow-modals';
+            iframe.allow = 'fullscreen';
+            iframe.src = 'about:blank';
+
+            const loadingDiv = document.createElement('div');
+            loadingDiv.style.cssText = `
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                color: var(--dim-text);
+                font-family: 'Share Tech Mono', monospace;
+                font-size: 12px;
+                display: none;
+                z-index: 5;
+            `;
+            loadingDiv.id = 'browser-loading';
+            loadingDiv.textContent = 'LOADING...';
+
+            const frameContainer = document.createElement('div');
+            frameContainer.style.cssText = 'flex: 1; position: relative;';
+            frameContainer.appendChild(iframe);
+            frameContainer.appendChild(loadingDiv);
+
+            const quickLinks = document.createElement('div');
+            quickLinks.style.cssText = 'display: flex; gap: 8px; flex-wrap: wrap; padding: 4px 0; flex-shrink: 0;';
+
+            const links = [
+                { label: 'Google', url: 'https://google.com' },
+                { label: 'GitHub', url: 'https://github.com/zvythrox67' },
+                { label: 'Hack Club', url: 'https://hackclub.com' },
+                { label: 'Stardance', url: 'https://stardance.hackclub.com/home' },
+            ];
+
+            links.forEach(l => {
+                const tag = document.createElement('span');
+                tag.style.cssText = `
+                    padding: 4px 12px;
+                    border: 1px solid var(--glow-line);
+                    border-radius: 12px;
+                    font-size: 11px;
+                    color: var(--dim-text);
+                    cursor: pointer;
+                    font-family: 'Share Tech Mono', monospace;
+                    transition: all 0.2s;
+                `;
+                tag.textContent = l.label;
+                tag.addEventListener('click', () => {
+                    urlInput.value = l.url;
+                    loadUrl(l.url);
+                });
+                tag.addEventListener('mouseenter', () => {
+                    tag.style.borderColor = 'var(--neon-blue)';
+                    tag.style.color = 'var(--neon-blue)';
+                });
+                tag.addEventListener('mouseleave', () => {
+                    tag.style.borderColor = 'var(--glow-line)';
+                    tag.style.color = 'var(--dim-text)';
+                });
+                quickLinks.appendChild(tag);
+            });
+
+            container.appendChild(urlBar);
+            container.appendChild(quickLinks);
+            container.appendChild(frameContainer);
+
+            function loadUrl(url) {
+                if (!url) return;
+                
+                loadingDiv.style.display = 'block';
+                iframe.style.opacity = '0.4';
+
+                let cleanUrl = url.trim();
+                if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) {
+                    if (cleanUrl.includes('.') && !cleanUrl.includes(' ')) {
+                        cleanUrl = 'https://' + cleanUrl;
+                    } else {
+                        cleanUrl = 'https://www.google.com/search?q=' + encodeURIComponent(cleanUrl);
+                    }
+                }
+
+                const proxyUrl = 'https://corsproxy.io/?';
+                const finalUrl = proxyUrl + encodeURIComponent(cleanUrl);
+                
+                iframe.onload = function() {
+                    loadingDiv.style.display = 'none';
+                    iframe.style.opacity = '1';
+                };
+
+                iframe.onerror = function() {
+                    loadingDiv.style.display = 'none';
+                    iframe.style.opacity = '1';
+                    if (iframe.src.includes('corsproxy.io')) {
+                        iframe.src = cleanUrl;
+                    }
+                };
+
+                iframe.src = finalUrl;
+                urlInput.value = cleanUrl;
+            }
+
+            goBtn.addEventListener('click', () => {
+                loadUrl(urlInput.value);
+            });
+
+            urlInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') loadUrl(urlInput.value);
+            });
+
+            backBtn.addEventListener('click', () => {
+                try {
+                    iframe.contentWindow.history.back();
+                } catch(e) {
+                    iframe.src = 'about:blank';
+                }
+            });
+
+            container.loadUrl = loadUrl;
+
+            return container;
+        },
+        init(container) {
+            if (container.loadUrl) {
+                setTimeout(() => {
+                    container.loadUrl('https://hackclub.com');
+                }, 300);
+            }
         }
     },
 
@@ -1386,11 +1592,15 @@ function _openApp(id) {
 const iconsContainer = document.getElementById('icons');
 const startAppsContainer = document.getElementById('start-apps');
 
+iconsContainer.innerHTML = '';
+startAppsContainer.innerHTML = '';
+
 Object.keys(APPS).forEach(id => {
     const app = APPS[id];
 
     const icon = document.createElement('div');
     icon.className = 'icon';
+    icon.dataset.app = id;
     
     const emoji = document.createElement('div');
     emoji.className = 'emoji';
@@ -1402,31 +1612,18 @@ Object.keys(APPS).forEach(id => {
     
     icon.appendChild(emoji);
     icon.appendChild(label);
-    icon.addEventListener('click', function(e) {
-        e.stopPropagation();
-        console.log('Icon clicked:', id);
-        openApp(id);
-    });
     iconsContainer.appendChild(icon);
+});
 
-    const item = document.createElement('div');
-    item.className = 'start-item';
-    item.dataset.title = app.title.toLowerCase();
+iconsContainer.addEventListener('click', function(e) {
+    const icon = e.target.closest('.icon');
+    if (!icon) return;
     
-    const itemEmoji = document.createElement('span');
-    itemEmoji.className = 'emoji';
-    itemEmoji.textContent = app.icon;
-    
-    const itemLabel = document.createElement('span');
-    itemLabel.textContent = app.title;
-    
-    item.appendChild(itemEmoji);
-    item.appendChild(itemLabel);
-    item.addEventListener('click', () => {
-        openApp(id);
-        document.getElementById('start-menu').classList.remove('show');
-    });
-    startAppsContainer.appendChild(item);
+    const appId = icon.dataset.app;
+    if (appId) {
+        console.log('Desktop icon clicked via delegation:', appId);
+        openApp(appId);
+    }
 });
 
 const startMenu = document.getElementById('start-menu');
